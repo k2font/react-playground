@@ -8,14 +8,36 @@
 - 再レンダリングされた後、stateの値が更新される
 - 逆を言えば、再レンダリング後にはレンダリング前のstateの値が使用される
 - 例
-```js
+```tsx
 <button onClick={() => {
-  this.setState({ count: this.state.count + 1 });
-  this.setState({ count: this.state.count + 1 });
-  this.setState({ count: this.state.count + 1 });
+  setState(state + 1);
+  setState(state + 1);
+  setState(state + 1);
 }}>+3</button>
 ```
-- ボタンをクリックすると、`this.state.count` の値は何になるか？
+- ボタンをクリックすると、`state` の値は何になるか？
   - 答えは1
-  - `this.state.count === 0` のまま再レンダリングが開始されるため、3回とも `this.state.count + 1` は `1` になる
+  - `state === 0` のまま再レンダリングが開始されるため、3回とも `state + 1` は `1` になる
   - 再レンダリング前に新しいstateの値を使用したい場合は、State Updater関数を使用すると良い
+
+## 更新されたstate値を用いる方法
+- setter関数に無名関数を渡せば良い
+```tsx
+<button onClick={() => {
+  setState(prevState => prevState + 1);
+  setState(prevState => prevState + 1);
+  setState(prevState => prevState + 1);
+}}>+3</button>
+```
+- こうすると、prevStateの値はボタンクリックにつき3ずつ増える
+- この無名関数をUpdater functionと呼ぶ
+  - React公式ドキュメントいわく。
+- イベントハンドラ内の他のすべてのコードが実行された後に処理されるようになる
+
+## Updater functionの引数の命名規則
+- stateのイニシャル
+```tsx
+<button onClick={() => {
+  setLastName(ln => ln + 1);
+}}>+1</button>
+```
